@@ -37,13 +37,13 @@ async function run() {
 
 		app.post('/toys', async (req, res) => {
 			const toy = req.body;
+			console.log(toy);
 			const result = await toyCollection.insertOne(toy);
 			res.send(result);
 		});
 
-		app.get('/toys/:sub_category', async (req, res) => {
-			const sub_category = req.params.sub_category;
-			const filter = { sub_category };
+		app.get('/toys', async (req, res) => {
+			const filter = req.query;
 			const result = await toyCollection.find(filter).toArray();
 			res.send(result);
 		});

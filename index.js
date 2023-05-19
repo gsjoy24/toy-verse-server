@@ -34,6 +34,18 @@ async function run() {
 		client.connect();
 
 		const toyCollection = client.db('toyVerse').collection('toys');
+		const indexKeys = { toy_name: 1 };
+		const indexOptions = { name: 'SearchToys' };
+		const result = await toyCollection.createIndex(indexKeys, indexOptions);
+
+		app.get('/search_toys/:name', async (req, res) => {
+			const searchName = req.params.name;
+			const result = await toyCollection
+				.find({ toy_name: { $regex: searchName, $options: 'i' } })
+				.limit(20)
+				.toArray();
+			res.send(result);
+		});
 
 		app.post('/toys', async (req, res) => {
 			const toy = req.body;

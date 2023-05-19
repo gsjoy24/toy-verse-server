@@ -31,14 +31,23 @@ const client = new MongoClient(uri, {
 async function run() {
 	try {
 		// Connect the client to the server	(optional starting in v4.7)
-		await client.connect();
+		client.connect();
 
 		const toyCollection = client.db('toyVerse').collection('toys');
 
-		app.get('/toys', async (req, res) => {
-			const result = await toyCollection.find().toArray();
+		app.post('/toys', async (req, res) => {
+			const toy = req.body;
+			const result = await toyCollection.insertOne(toy);
 			res.send(result);
 		});
+
+		app.get('/toys/:sub_category', async (req, res) => {
+			const sub_category = req.params.sub_category;
+			const filter = { sub_category };
+			const result = await toyCollection.find(filter).toArray();
+			res.send(result);
+		});
+
 		// Send a ping to confirm a successful connection
 		await client.db('admin').command({ ping: 1 });
 		console.log('Pinged your deployment. You successfully connected to MongoDB!');

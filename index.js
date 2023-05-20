@@ -38,6 +38,7 @@ async function run() {
 		const indexOptions = { name: 'SearchToys' };
 		const result = await toyCollection.createIndex(indexKeys, indexOptions);
 
+		// for search method
 		app.get('/search_toys/:name', async (req, res) => {
 			const searchName = req.params.name;
 			const result = await toyCollection
@@ -47,18 +48,21 @@ async function run() {
 			res.send(result);
 		});
 
+		// add toys method
 		app.post('/toys', async (req, res) => {
 			const toy = req.body;
 			const result = await toyCollection.insertOne(toy);
 			res.send(result);
 		});
 
+		// get toys by filtering
 		app.get('/toys', async (req, res) => {
 			const filter = req.query;
 			const result = await toyCollection.find(filter).toArray();
 			res.send(result);
 		});
 
+		// sorting method
 		app.get('/toys/:user/sort', async (req, res) => {
 			const type = req.query.type === 'ascending';
 			const user = req.params.user;
@@ -74,6 +78,7 @@ async function run() {
 			res.send(result);
 		});
 
+		// to get single toy
 		app.get('/toys/:id', async (req, res) => {
 			const id = req.params.id;
 			const query = { _id: new ObjectId(id) };
@@ -81,6 +86,7 @@ async function run() {
 			res.send(result);
 		});
 
+		// update toys information
 		app.patch('/toys/:id', async (req, res) => {
 			const id = req.params.id;
 			const toy = req.body;
@@ -92,6 +98,7 @@ async function run() {
 			res.send(result);
 		});
 
+		// delete from database
 		app.delete('/toys/:id', async (req, res) => {
 			const id = req.params.id;
 			const query = { _id: new ObjectId(id) };
